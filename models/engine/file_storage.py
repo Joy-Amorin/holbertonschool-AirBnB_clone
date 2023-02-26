@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" Module"""
+"""Module """
 import os
 import json
 
@@ -11,7 +11,7 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        """return the dictionary"""
+        """returns the dictionary"""
 
         return FileStorage.__objects
 
@@ -22,18 +22,18 @@ class FileStorage:
 
     def save(self):
         """serializes"""
-        with open(Filestorage.__file_path, "w") as f:
+        with open(FileStorage.__file_path, "w") as f:
             obj_dict = {}
             for key, value in FileStorage.__objects.items():
-                obj_dict[key] = value.to_dict()
+                obj_dict[key] = value.to_dct()
                 json.dump(obj_dict, f)
 
-    def reload(self):
+    def reload (self):
         """deserializes the JSON fie"""
         try:
             with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
                 dict_j = json.loads(f)
                 for key, value in dict_j.items():
-                    FileStorage.__bjects[key] = BaseModel.new(**value)
+                    FileStorage.__objects[key] = BaseModel.new(**value)
         except FileNotFoundError:
             pass
