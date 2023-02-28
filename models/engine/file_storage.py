@@ -20,14 +20,20 @@ class FileStorage:
     def reload(self):
         from models.base_model import BaseModel
         from models.user import User
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.city import City
+        from models.review import Review
+        from models.state import State
 
         try:
+            dict_class = {"User": User, "BaseModel": BaseModel, "Place": Place,
+                          "Review": Review, "Amenity": Amenity, "City": City,
+                          "State": State}
             with open(self.__file_path, "r", encoding="utf-8") as f:
                 dict_j = json.loads(f.read())
             for key, value in dict_j.items():
-                if key.split(".")[0] == "BaseModel":
-                    self.__objects[key] = BaseModel(**value)
-                if key.split(".")[0] == "User":
-                    self.__objects[key] = User(**value)
+                if key.split(".")[0] in dict_class:
+                    self.__objects[key] = dict_class[key](**value)
         except FileNotFoundError:
             pass
