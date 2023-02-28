@@ -13,6 +13,7 @@ This project consists of building a complete web application by cloning AirBnB.
 
 ## How to start it
 We run **console.py:**
+
 The shell should work like this in interactive mode:
 ```
 $ ./console.py
