@@ -1,40 +1,33 @@
 #!/usr/bin/python3
-"""Module """
 import json
-import os.path
 
 
 class FileStorage:
-    """class"""
-
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """returns the dictionary"""
-
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
-        """sets obj"""
-
-        FileStorage.__objects[f"{obj.__class__.__name__}.{obj.id}"] = obj
+        self.__objects.update({f"{obj.__class__.__name__}.{obj.id}": obj})
 
     def save(self):
-        """serializes"""
-        obj_dict = {}
-        for key, value in FileStorage.__objects.items():
-            obj_dict[key] = value.to_dict()
-        with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
-            json.dump(obj_dict, f)
+        dic_f = {key: value.to_dict() for key, value in self.__objects.items()}
+        with open(self.__file_path, "w", encoding="utf-8") as f:
+            f.write(json.dumps(dic_f))
 
     def reload(self):
-        """deserializes the JSON fie"""
         from models.base_model import BaseModel
+        from models.user import User
+
         try:
-            with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
+            with open(self.__file_path, "r", encoding="utf-8") as f:
                 dict_j = json.loads(f.read())
             for key, value in dict_j.items():
-                FileStorage.__objects[key] = BaseModel(**value)
+                if key.split(".")[0] == "BaseModel":
+                    self.__objects[key] = BaseModel(**value)
+                if key.split(".")[0] == "User":
+                    self.__objects[key] = User(**value)
         except FileNotFoundError:
             pass
